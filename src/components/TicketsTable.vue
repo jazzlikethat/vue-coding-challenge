@@ -1,30 +1,35 @@
 <template>
   <div class="table-container">
+    {{ chartsData }}
     <vue-good-table
       :columns="columns"
-      :rows="rows" 
-      styleClass="vgt-table striped" 
+      :rows="rows"
+      @on-column-filter="onColumnFilter"
+      styleClass="vgt-table striped"
       :search-options="{
         enabled: true,
-        skipDiacritics: true,
+        skipDiacritics: true
       }"
       :pagination-options="{
         enabled: true,
         mode: 'pages',
         position: 'top',
-        dropdownAllowAll: false,
-      }"/>
+        dropdownAllowAll: false
+      }"
+    />
   </div>
 </template>
 
 <script>
-
+/* eslint-disable */
+import * as d3 from "d3";
 import tickets from '../../data/sample-data.json';
 
 export default {
   name: "TicketsTable",
-  data() {
+  data: function() {
     return {
+      filteredTickets: [],
       columns: [
         {
           label: 'Requestor',
@@ -128,36 +133,147 @@ export default {
           sortable: true
         }
       ],
-      rows: tickets
+      rows: tickets,
+      chartsData: {
+        priority: {}
+      }
     }
   },
   methods: {
     sortValueAfterHyphen(x, y) {
       // x - row1 value for column
       // y - row2 value for column
-      try {
-        x = x.split("-")[1].trim();
-        y = y.split("-")[1].trim();
-      }
-      catch (e) {
-        console.error(e);
-      }
-      finally {
-        return (x < y ? -1 : (x > y ? 1 : 0));
-      }
+      x = x.split("-").pop().trim();
+      y = y.split("-").pop().trim();
+      return (x < y ? -1 : (x > y ? 1 : 0));
     },
     showValueAfterHyphen(inputString) {
-      let outputString = inputString;
-      try {
-        outputString = outputString.split("-")[1].trim();
+      return inputString.split("-").pop().trim();
+    },
+    onColumnFilter(params) {
+      let filters = params.columnFilters;
+      let keys = Object.keys(filters);
+      keys.forEach(function(key) {
+        if (filters[key] === "") {
+          delete filters[key];
+        }
+      });
+      keys = Object.keys(filters);
+      if (keys.length === 0) {
+        this.filteredTickets = tickets;
+        this.getChartsData();
+        return;
       }
-      catch (e) {
-        console.error(e);
+      this.filteredTickets = tickets.filter(function(entry) {
+        let match = true;
+        for (let i = 0; i < keys.length; i++) {
+          let key = keys[i];
+          if (entry[key] !== filters[key]) {
+            match = false;
+            break;
+          }
+        }
+        return match;
+      });
+      this.getChartsData();
+    },
+    getChartsData: function () {
+      let priority = {
+        '0 - Unassigned': 0,
+        '1 - Low': 0,
+        '2 - Medium': 0,
+        '3 - High': 0
+      };
+      this.filteredTickets.forEach(function(entry) {
+        priority[entry.Priority] += 1;
+      });
+
+      this.chartsData.priority = priority;
+
+      // draw a priority pie chart
+      let priorityDataSet = [];
+      Object.keys(priority).forEach(function(key) {
+        let entry = {};
+        entry.value = priority[key];
+        entry.label = key.split("-").pop().trim();
+        priorityDataSet.push(entry);
+      });
+      let margin = {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20
+      };
+      let width = 300 - margin.right - margin.left;
+      let height = 300 - margin.bottom - margin.top;
+      let radius = width / 2;
+
+      let color = d3.scaleOrdinal()
+          .range(["#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"]);
+
+      let arc = d3.arc()
+          .outerRadius(radius - 10)
+          .innerRadius(0);
+
+      // arc for the labels position
+      let labelArc = d3.arc()
+          .outerRadius(radius - 40)
+          .innerRadius(radius - 40);
+
+      let pie = d3.pie()
+          .sort(null)
+          .value(function (d) {
+            return d.value;
+          });
+
+      d3.select(".priority-chart").selectAll("*").remove();
+
+      let priorityChart = d3.select(".priority-chart")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        // "g element is a container used to group other SVG elements"
+  var g = priorityChart.selectAll(".arc")
+      .data(pie(priorityDataSet))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  // append path 
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.label); })
+    // transition 
+    .transition()
+      .ease(d3.easeLinear)
+      .duration(1000)
+      .attrTween("d", tweenPie);
+        
+  // append text
+  g.append("text")
+    .transition()
+      .ease(d3.easeLinear)
+      .duration(1000)
+    .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .text(function(d) { 
+        let value = d.data.value;
+        return (value === 0) ? "" : d.data.label;
+       });
+
+      // Helper function for animation of pie chart and donut chart
+      function tweenPie(b) {
+        b.innerRadius = 0;
+        var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+        return function(t) { return arc(i(t)); };
       }
-      finally {
-        return outputString;
-      }
+
     }
+  },
+  mounted: function() {
+    this.filteredTickets = tickets;
+    setTimeout(this.getChartsData);
   }
 };
 </script>

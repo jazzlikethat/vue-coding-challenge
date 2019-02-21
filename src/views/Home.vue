@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <svg class="priority-chart"></svg>
     <TicketsTable />
   </div>
 </template>
@@ -15,3 +16,15 @@ export default {
   }
 };
 </script>
+
+<style>
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+</style>
+
