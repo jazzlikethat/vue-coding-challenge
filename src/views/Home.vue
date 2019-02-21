@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <svg class="priority-chart"></svg>
+    <div class="chart priority-chart"></div>
+    <div class="chart severity-chart"></div>
+    <div class="chart satisfaction-chart"></div>
+    <div class="chart seniority-chart"></div>
     <TicketsTable />
   </div>
 </template>
@@ -18,6 +21,10 @@ export default {
 </script>
 
 <style>
+.chart {
+  width: 300px;
+  display: inline-block;
+}
 .arc text {
   font: 10px sans-serif;
   text-anchor: middle;

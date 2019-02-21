@@ -1,6 +1,9 @@
 <template>
   <div class="table-container">
-    {{ chartsData }}
+    <pie-chart attr-class="priority-chart" :chart-data="chartsData.priority"></pie-chart>
+    <pie-chart attr-class="severity-chart" :chart-data="chartsData.severity"></pie-chart>
+    <pie-chart attr-class="satisfaction-chart" :chart-data="chartsData.seniority"></pie-chart>
+    <pie-chart attr-class="seniority-chart" :chart-data="chartsData.satisfaction"></pie-chart>
     <vue-good-table
       :columns="columns"
       :rows="rows"
@@ -22,11 +25,14 @@
 
 <script>
 /* eslint-disable */
-import * as d3 from "d3";
 import tickets from '../../data/sample-data.json';
+import PieChart from './PieChart.vue';
 
 export default {
   name: "TicketsTable",
+  components: {
+    PieChart
+  },
   data: function() {
     return {
       filteredTickets: [],
@@ -47,10 +53,10 @@ export default {
           filterOptions: {
             enabled: true,
             filterDropdownItems: [
-              { value: '1 - Junior', text: 'Junior' },  
-              { value: '2 - Regular', text: 'Regular' },  
-              { value: '3 - Senior', text: 'Senior' },
-              { value: '4 - Management', text: 'Management' }
+              { value: "1 - Junior", text: "Junior" },  
+              { value: "2 - Regular", text: "Regular" },  
+              { value: "3 - Senior", text: "Senior" },
+              { value: "4 - Management", text: "Management" }
             ]
           }
         },
@@ -120,10 +126,10 @@ export default {
           filterOptions: {
             enabled: true,
             filterDropdownItems: [
-              { value: '0 - Unknown', text: 'Unknown' },
-              { value: '1 - Unsatisfied', text: 'Unsatisfied' },
-              { value: '2 - Satisfied', text: 'Satisfied' },
-              { value: '3 - Highly satisfied', text: 'Highly satisfied' }
+              { value: "0 - Unknown", text: 'Unknown' },
+              { value: "1 - Unsatisfied", text: 'Unsatisfied' },
+              { value: "2 - Satisfied", text: 'Satisfied' },
+              { value: "3 - Highly satisfied", text: 'Highly satisfied' }
             ]
           }
         },
@@ -135,7 +141,10 @@ export default {
       ],
       rows: tickets,
       chartsData: {
-        priority: {}
+        priority: {},
+        severity: {},
+        seniority: {},
+        satisfaction: {}
       }
     }
   },
@@ -184,90 +193,37 @@ export default {
         '2 - Medium': 0,
         '3 - High': 0
       };
+      let severity = {
+        "1 - Minor": 0,
+        "2 - Normal": 0,
+        "3 - Major": 0,
+        "4 - Critical": 0
+      };
+      let seniority = {
+        "1 - Junior": 0,
+        "2 - Regular": 0,
+        "3 - Senior": 0,
+        "4 - Management": 0
+      };
+      let satisfaction = {
+        "0 - Unknown": 0,
+        "1 - Unsatisfied": 0,
+        "2 - Satisfied": 0,
+        "3 - Highly satisfied": 0
+      };
       this.filteredTickets.forEach(function(entry) {
         priority[entry.Priority] += 1;
+        severity[entry.Severity] += 1;
+        seniority[entry.RequestorSeniority] += 1;
+        satisfaction[entry.Satisfaction] += 1;
       });
 
-      this.chartsData.priority = priority;
-
-      // draw a priority pie chart
-      let priorityDataSet = [];
-      Object.keys(priority).forEach(function(key) {
-        let entry = {};
-        entry.value = priority[key];
-        entry.label = key.split("-").pop().trim();
-        priorityDataSet.push(entry);
-      });
-      let margin = {
-        top: 20,
-        right: 20,
-        bottom: 20,
-        left: 20
+      this.chartsData = {
+        priority: priority,
+        severity: severity,
+        seniority: seniority,
+        satisfaction: satisfaction
       };
-      let width = 300 - margin.right - margin.left;
-      let height = 300 - margin.bottom - margin.top;
-      let radius = width / 2;
-
-      let color = d3.scaleOrdinal()
-          .range(["#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"]);
-
-      let arc = d3.arc()
-          .outerRadius(radius - 10)
-          .innerRadius(0);
-
-      // arc for the labels position
-      let labelArc = d3.arc()
-          .outerRadius(radius - 40)
-          .innerRadius(radius - 40);
-
-      let pie = d3.pie()
-          .sort(null)
-          .value(function (d) {
-            return d.value;
-          });
-
-      d3.select(".priority-chart").selectAll("*").remove();
-
-      let priorityChart = d3.select(".priority-chart")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-        // "g element is a container used to group other SVG elements"
-  var g = priorityChart.selectAll(".arc")
-      .data(pie(priorityDataSet))
-    .enter().append("g")
-      .attr("class", "arc");
-
-  // append path 
-  g.append("path")
-      .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.label); })
-    // transition 
-    .transition()
-      .ease(d3.easeLinear)
-      .duration(1000)
-      .attrTween("d", tweenPie);
-        
-  // append text
-  g.append("text")
-    .transition()
-      .ease(d3.easeLinear)
-      .duration(1000)
-    .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-      .attr("dy", ".35em")
-      .text(function(d) { 
-        let value = d.data.value;
-        return (value === 0) ? "" : d.data.label;
-       });
-
-      // Helper function for animation of pie chart and donut chart
-      function tweenPie(b) {
-        b.innerRadius = 0;
-        var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-        return function(t) { return arc(i(t)); };
-      }
 
     }
   },
