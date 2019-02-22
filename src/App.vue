@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div class="logout">
       <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
     </div>
     <router-view @authenticated="setAuthenticated" />
@@ -41,5 +41,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+  .logout {
+    text-align: right;
+    margin: 10px 0;
+  }
 }
 </style>

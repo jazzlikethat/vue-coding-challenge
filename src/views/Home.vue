@@ -16,7 +16,13 @@ export default {
   name: "home",
   components: {
     TicketsTable
-  }
+  },
+  mounted() {
+    // Edge case: On reload
+    if (!this.$parent.authenticated) {
+      this.$router.replace({ name: "login" });
+    }
+  },
 };
 </script>
 

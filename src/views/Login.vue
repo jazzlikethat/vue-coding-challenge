@@ -1,9 +1,25 @@
 <template>
   <div class="login-container">
-    <h1>Login</h1>
-    <input type="text" name="username" v-model="input.username" placeholder="Username">
-    <input type="password" name="password" v-model="input.password" placeholder="Password" />
-    <button type="button" v-on:click="login()">Login</button>
+    <form class="form-signin">
+      <label for="inputEmail" class="sr-only">Username</label>
+      <input type="text" 
+        id="inputEmail" 
+        class="form-control" 
+        v-model="input.username" 
+        placeholder="Username" 
+        required 
+        autofocus
+      >
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" 
+        id="inputPassword" 
+        class="form-control" 
+        v-model="input.password"
+        placeholder="Password" 
+        required
+      >
+      <button class="btn btn-lg btn-primary btn-block" v-on:click="login()" type="submit">Sign in</button>
+    </form>
   </div>
 </template>
 
@@ -40,3 +56,43 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+.login-container {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
