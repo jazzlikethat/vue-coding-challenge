@@ -1,9 +1,7 @@
 <template>
   <div class="home">
+    <div class="chart overall-bar-chart"></div>
     <div class="chart priority-chart"></div>
-    <div class="chart severity-chart"></div>
-    <div class="chart satisfaction-chart"></div>
-    <div class="chart seniority-chart"></div>
     <TicketsTable />
   </div>
 </template>
@@ -28,12 +26,10 @@ export default {
 
 <style>
 .chart {
-  width: 300px;
   display: inline-block;
 }
-.arc text {
+.arc text, .overall-bar-chart text {
   font: 10px sans-serif;
-  text-anchor: middle;
 }
 
 .arc path {

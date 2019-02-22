@@ -1,9 +1,7 @@
 <template>
   <div class="table-container">
     <pie-chart attr-class="priority-chart" :chart-data="chartsData.priority"></pie-chart>
-    <pie-chart attr-class="severity-chart" :chart-data="chartsData.severity"></pie-chart>
-    <pie-chart attr-class="satisfaction-chart" :chart-data="chartsData.seniority"></pie-chart>
-    <pie-chart attr-class="seniority-chart" :chart-data="chartsData.satisfaction"></pie-chart>
+    <bar-chart attr-class="overall-bar-chart" :chart-data="chartsData"></bar-chart>
     <vue-good-table
       :columns="columns"
       :rows="rows"
@@ -27,11 +25,13 @@
 /* eslint-disable */
 import tickets from '../../data/sample-data.json';
 import PieChart from './PieChart.vue';
+import BarChart from './BarChart.vue';
 
 export default {
   name: "TicketsTable",
   components: {
-    PieChart
+    PieChart,
+    BarChart
   },
   data: function() {
     return {
@@ -52,6 +52,7 @@ export default {
           formatFn: this.showValueAfterHyphen,
           filterOptions: {
             enabled: true,
+            placeholder: 'Filter',
             filterDropdownItems: [
               { value: "1 - Junior", text: "Junior" },  
               { value: "2 - Regular", text: "Regular" },  
@@ -85,6 +86,7 @@ export default {
           formatFn: this.showValueAfterHyphen,
           filterOptions: {
             enabled: true,
+            placeholder: 'Filter',
             filterDropdownItems: [
               { value: '1 - Minor', text: 'Minor' },
               { value: '2 - Normal', text: 'Normal' },
@@ -102,6 +104,7 @@ export default {
           formatFn: this.showValueAfterHyphen,
           filterOptions: {
             enabled: true,
+            placeholder: 'Filter',
             filterDropdownItems: [
               { value: '0 - Unassigned', text: 'Unassigned' },
               { value: '1 - Low', text: 'Low' },
@@ -125,6 +128,7 @@ export default {
           formatFn: this.showValueAfterHyphen,
           filterOptions: {
             enabled: true,
+            placeholder: 'Filter',
             filterDropdownItems: [
               { value: "0 - Unknown", text: 'Unknown' },
               { value: "1 - Unsatisfied", text: 'Unsatisfied' },

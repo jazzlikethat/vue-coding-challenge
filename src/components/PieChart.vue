@@ -8,24 +8,21 @@ export default {
         drawPieChart() {
             let dataset = [];
             let dataFromParent = this.chartData;
+            let dataSum = 0;
             Object.keys(dataFromParent).forEach(function(key) {
                 let entry = {};
                 entry.value = dataFromParent[key];
                 entry.label = key.split("-").pop().trim();
                 dataset.push(entry);
+                dataSum += entry.value;
             });
-            let margin = {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20
-            };
-            let width = 300 - margin.right - margin.left;
-            let height = 300 - margin.bottom - margin.top;
-            let radius = width / 2;
+
+            let width = 300;
+            let height = 300;
+            let radius = width / 3;
 
             let color = d3.scaleOrdinal()
-                .range(["#BBDEFB", "#90CAF9", "#64B5F6", "#42A5F5", "#2196F3", "#1E88E5", "#1976D2"]);
+                .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
             let arc = d3.arc()
                 .outerRadius(radius - 10)
@@ -33,8 +30,12 @@ export default {
 
             // arc for the labels position
             let labelArc = d3.arc()
-                .outerRadius(radius - 40)
-                .innerRadius(radius - 40);
+                .outerRadius(radius + 2)
+                .innerRadius(radius + 2);
+
+            let getAngle = function(d) {
+                return (180 / Math.PI * (d.startAngle + d.endAngle) / 2 - 90);
+            };
 
             let pie = d3.pie()
                 .sort(null)
@@ -72,11 +73,29 @@ export default {
                 .transition()
                 .ease(d3.easeLinear)
                 .duration(1000)
-                .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-                .attr("dy", ".35em")
+                .attr("transform", function(d) {
+                    let angle = getAngle(d);
+                    if (d.data.value === dataSum) {
+                        angle = 0;
+                    }
+                    else if (angle > 90) {
+                        angle += 180;
+                    }
+                    return "translate(" + labelArc.centroid(d) + ")" +
+                      "rotate(" + angle + ")";
+                })
+                .attr("dy", "5")
+                .style("text-anchor", function(d) {
+                    let anchor = "end";
+                    let angle = getAngle(d);
+                    if (angle > 90) {
+                        anchor = "start";
+                    }
+                    return anchor;
+                })
                 .text(function(d) { 
                     let value = d.data.value;
-                    return (value === 0) ? "" : d.data.label;
+                    return (value === 0) ? "" : d.data.label + " (" + d.data.value + ")";
                 });
 
             function tweenPie(b) {

@@ -44,7 +44,7 @@ export default {
 
   .logout {
     text-align: right;
-    margin: 10px 0;
+    margin: 10px 15px 0 0;
   }
 }
 </style>
