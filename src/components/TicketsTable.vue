@@ -241,6 +241,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .table-container {
-  padding: 0 10px;
+  padding: 20px 10px;
 }
 </style>

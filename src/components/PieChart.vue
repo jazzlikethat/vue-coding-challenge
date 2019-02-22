@@ -18,7 +18,7 @@ export default {
             });
 
             let width = 300;
-            let height = 300;
+            let height = 250;
             let radius = width / 3;
 
             let color = d3.scaleOrdinal()
@@ -45,12 +45,32 @@ export default {
 
             d3.select("." + this.attrClass).selectAll("*").remove();
 
-            let chartElement = d3.select("." + this.attrClass)
+            d3.select("." + this.attrClass)
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
+                .append("text")
+                .attr("x", width / 2)             
+                .attr("y", 10)
+                .attr("text-anchor", "middle")  
+                .style("font-size", "12px")
+                .style("text-decoration", "underline")
+                .text("Pie chart for Priority");
+
+            let chartElement = d3.select("." + this.attrClass)
+                .select("svg")
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            if (dataSum === 0) {
+                // No data to display
+                chartElement
+                    .append("text")
+                    .style("font-size", "10px")
+                    .attr("text-anchor", "middle")
+                    .text("The filter returned zero records");
+                return;
+            }
 
             // "g element is a container used to group other SVG elements"
             let g = chartElement.selectAll(".arc")
@@ -85,11 +105,14 @@ export default {
                       "rotate(" + angle + ")";
                 })
                 .attr("dy", "5")
-                .style("text-anchor", function(d) {
+                .attr("text-anchor", function(d) {
                     let anchor = "end";
                     let angle = getAngle(d);
                     if (angle > 90) {
                         anchor = "start";
+                    }
+                    else if (dataSum === d.value) {
+                        anchor = "middle";
                     }
                     return anchor;
                 })
