@@ -8,7 +8,7 @@
 
 <script>
 // @ is an alias to /src
-import TicketsTable from "@/components/TicketsTable.vue";
+import TicketsTable from "@/components/TicketsTable/TicketsTable.vue";
 
 export default {
   name: "home",

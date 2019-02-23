@@ -68,7 +68,8 @@
                 <b-form-select id="satisfaction" :options="SatisfactionArray" required v-model="form.Satisfaction"></b-form-select>
             </b-form-group>
 
-            <div class="submit-button">
+            <div class="buttons-container">
+                <b-button type="button" v-on:click="hideModal">Cancel</b-button>
                 <b-button type="submit" variant="primary">Submit</b-button>
             </div>
 
@@ -79,6 +80,7 @@
 <script>
 export default {
     name: "NewTicket",
+    props: ["ticketsLength"],
     data: function() {
         return {
             form: {
@@ -126,9 +128,45 @@ export default {
         }
     },
     methods: {
+        hideModal() {
+            this.$emit('close-modal');
+            this.form = {
+                "Requestor": null,
+                "RequestorSeniority": null,
+                "ITOwner": null,
+                "FiledAgainst": null,
+                "TicketType": null,
+                "Severity": null,
+                "Priority": null,
+                "daysOpen": null,
+                "Satisfaction": null,
+                "Ticket Creation Date": null
+            };
+        },
         onSubmit(evt) {
             evt.preventDefault();
-            this.$emit('new-ticket-data', this.form);
+
+            let formData = this.form;
+
+            // get today's date
+            let today = new Date();
+            let dd = today.getDate();
+            let mm = today.getMonth() + 1; //January is 0!
+            let yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            today = mm + '/' + dd + '/' + yyyy;
+            
+            formData["Ticket Creation Date"] = today;
+            formData.CustomCreated = true;
+            formData.ticket = this.ticketsLength + 1;
+
+            this.$emit('new-ticket-data', formData);
             this.form = {
                 "Requestor": null,
                 "RequestorSeniority": null,
@@ -150,8 +188,11 @@ export default {
 .form-new-ticket {
     text-align: initial;
 
-    .submit-button {
+    .buttons-container {
         text-align: center;
+        button {
+            margin: 0 10px;
+        }
     }
 }
 </style>
