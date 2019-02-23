@@ -56,7 +56,7 @@ export default {
                 .range([INNER_HEIGHT, 0])
 
             let yAxis = d3.axisLeft(yAxisScale)
-                .tickValues( [maxValue / 3, maxValue / 2, maxValue] );
+                .tickValues( [Math.floor(maxValue / 3), Math.floor(maxValue / 2), maxValue] );
 
             function y(d) {
                 return HEIGHT - yScale(d.value);

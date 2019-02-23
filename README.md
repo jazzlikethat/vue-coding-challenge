@@ -1,4 +1,4 @@
-# coding-challenge-table
+# vue-coding-challenge
 
 ## Project setup
 ```

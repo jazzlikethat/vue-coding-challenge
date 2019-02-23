@@ -8,11 +8,12 @@
     <b-modal 
       id="new-ticket-modal" 
       title="Create new ticket" 
-      no-close-on-backdrop="true" 
-      no-close-on-esc="true" 
-      hide-footer="true" 
+      ref="myModalRef" 
+      no-close-on-backdrop 
+      no-close-on-esc 
+      hide-footer 
       >
-      <new-ticket></new-ticket>
+      <new-ticket v-on:new-ticket-data="saveNewTicket"></new-ticket>
     </b-modal>
     <pie-chart attr-class="priority-chart" :chart-data="chartsData.priority"></pie-chart>
     <bar-chart attr-class="overall-bar-chart" :chart-data="chartsData"></bar-chart>
@@ -24,7 +25,7 @@
       :search-options="{
         enabled: true,
         skipDiacritics: true,
-        externalQuery: debounceSearchInput
+        externalQuery: debouncedSearchInput
       }"
       :pagination-options="{
         enabled: true,
@@ -48,10 +49,12 @@ export default {
   name: "TicketsTable",
   components: {
     PieChart,
-    BarChart
+    BarChart,
+    NewTicket
   },
   data: function() {
     return {
+      ticketsLength: 0,
       filteredTickets: [],
       columns: [
         {
@@ -167,7 +170,7 @@ export default {
         seniority: {},
         satisfaction: {}
       },
-      debounceSearchInput: "",
+      debouncedSearchInput: "",
       userSearchInput: ""
     }
   },
@@ -185,13 +188,14 @@ export default {
     onColumnFilter(params) {
       let filters = params.columnFilters;
       let keys = Object.keys(filters);
+      // If some filter is removed, delete the key from the params
       keys.forEach(function(key) {
         if (filters[key] === "") {
           delete filters[key];
         }
       });
       keys = Object.keys(filters);
-      if (keys.length === 0) {
+      if (keys.length === 0) { // meaning no filters applied
         this.filteredTickets = tickets;
         this.getChartsData();
         return;
@@ -250,12 +254,35 @@ export default {
 
     },
     setDebounceUserInput: debounce(function() {
-      console.log('set table input');
-      this.debounceSearchInput = this.userSearchInput;
-    }, 500)
+      this.debouncedSearchInput = this.userSearchInput;
+    }, 500),
+    saveNewTicket: function(formData) {
+      this.$refs.myModalRef.hide();
+      this.ticketsLength += 1;
+      formData.ticket = this.ticketsLength;
+
+      // get today's date
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+      today = mm + '/' + dd + '/' + yyyy;
+      
+      formData["Ticket Creation Date"] = today;
+      formData.CustomCreated = true;
+      this.rows.unshift(formData);
+    }
   },
   mounted: function() {
     this.filteredTickets = tickets;
+    this.ticketsLength = this.filteredTickets.length;
     setTimeout(this.getChartsData);
   },
   watch: {
