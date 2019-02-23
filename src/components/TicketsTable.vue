@@ -1,5 +1,19 @@
 <template>
   <div class="table-container">
+    <div class="search-input">
+      <b-button variant="outline-secondary" v-b-modal.new-ticket-modal>Create ticket</b-button>
+      <input type="text" class="form-control" v-model="userSearchInput" placeholder="Search tickets">
+    </div>
+    <!-- Modal Component -->
+    <b-modal 
+      id="new-ticket-modal" 
+      title="Create new ticket" 
+      no-close-on-backdrop="true" 
+      no-close-on-esc="true" 
+      hide-footer="true" 
+      >
+      <new-ticket></new-ticket>
+    </b-modal>
     <pie-chart attr-class="priority-chart" :chart-data="chartsData.priority"></pie-chart>
     <bar-chart attr-class="overall-bar-chart" :chart-data="chartsData"></bar-chart>
     <vue-good-table
@@ -9,7 +23,8 @@
       styleClass="vgt-table striped bordered condensed"
       :search-options="{
         enabled: true,
-        skipDiacritics: true
+        skipDiacritics: true,
+        externalQuery: debounceSearchInput
       }"
       :pagination-options="{
         enabled: true,
@@ -23,9 +38,11 @@
 
 <script>
 /* eslint-disable */
+import debounce from 'lodash.debounce';
 import tickets from '../../data/sample-data.json';
 import PieChart from './PieChart.vue';
 import BarChart from './BarChart.vue';
+import NewTicket from './NewTicket.vue';
 
 export default {
   name: "TicketsTable",
@@ -149,7 +166,9 @@ export default {
         severity: {},
         seniority: {},
         satisfaction: {}
-      }
+      },
+      debounceSearchInput: "",
+      userSearchInput: ""
     }
   },
   methods: {
@@ -229,11 +248,20 @@ export default {
         satisfaction: satisfaction
       };
 
-    }
+    },
+    setDebounceUserInput: debounce(function() {
+      console.log('set table input');
+      this.debounceSearchInput = this.userSearchInput;
+    }, 500)
   },
   mounted: function() {
     this.filteredTickets = tickets;
     setTimeout(this.getChartsData);
+  },
+  watch: {
+    userSearchInput: function() {
+      this.setDebounceUserInput();
+    }
   }
 };
 </script>
@@ -241,6 +269,24 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .table-container {
-  padding: 20px 10px;
+  padding: 45px 10px;
+  position: relative;
+
+  .search-input {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+
+    button {
+      margin-bottom: 5px;
+      margin-right: 5px;
+    }
+    
+    input {
+      display: inline-block;
+      width: 250px;
+      max-width: 50%;
+    }
+  }
 }
 </style>
