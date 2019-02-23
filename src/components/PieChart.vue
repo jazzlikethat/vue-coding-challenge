@@ -68,7 +68,7 @@ export default {
                     .append("text")
                     .style("font-size", "10px")
                     .attr("text-anchor", "middle")
-                    .text("The filter returned zero records");
+                    .text("The filter returned zero tickets");
                 return;
             }
 

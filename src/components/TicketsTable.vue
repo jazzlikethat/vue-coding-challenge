@@ -6,7 +6,7 @@
       :columns="columns"
       :rows="rows"
       @on-column-filter="onColumnFilter"
-      styleClass="vgt-table striped"
+      styleClass="vgt-table striped bordered condensed"
       :search-options="{
         enabled: true,
         skipDiacritics: true

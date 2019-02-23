@@ -12,6 +12,7 @@ export default {
             let colors = ["#b3b300", "#006666"];
             let categories = [];
             let index = 0;
+            let dataSum = 0;
             Object.keys(dataFromParent).forEach(function(key) {
                 if (key === "priority" || key === "severity") {
                     return;
@@ -26,6 +27,7 @@ export default {
                     if (entry.value > maxValue) {
                         maxValue = entry.value;
                     }
+                    dataSum += entry.value;
                 });
                 dataset.push( { label: "", value: 0 } );
                 index++;
@@ -81,6 +83,17 @@ export default {
             let chartElement = d3.select("." + this.attrClass)
                 .select("svg")
                 .append("g");
+
+            if (dataSum === 0) {
+                // No data to display
+                chartElement
+                    .attr("transform", "translate(50," + HEIGHT / 2 + ")")
+                    .append("text")
+                    .style("font-size", "10px")
+                    .attr("text-anchor", "start")
+                    .text("The filter returned zero tickets");
+                return;
+            }
 
             (function update(data) {
                 const t = d3.transition()

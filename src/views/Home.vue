@@ -35,5 +35,11 @@ export default {
 .arc path {
   stroke: #fff;
 }
+
+@media screen and (max-width: 800px) {
+  .priority-chart {
+    display: none;
+  }
+}
 </style>
 
