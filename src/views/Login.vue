@@ -2,23 +2,31 @@
   <div class="login-container">
     <form class="form-signin">
       <label for="inputEmail" class="sr-only">Username</label>
-      <input type="text" 
-        id="inputEmail" 
-        class="form-control" 
-        v-model="input.username" 
-        placeholder="Username" 
-        required 
-        autofocus
-      >
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" 
-        id="inputPassword" 
-        class="form-control" 
-        v-model="input.password"
-        placeholder="Password" 
+      <input
+        type="text"
+        id="inputEmail"
+        class="form-control"
+        v-model="input.username"
+        placeholder="Username"
         required
+        autofocus
+      />
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input
+        type="password"
+        id="inputPassword"
+        class="form-control"
+        v-model="input.password"
+        placeholder="Password"
+        required
+      />
+      <button
+        class="btn btn-lg btn-primary btn-block"
+        v-on:click="login()"
+        type="submit"
       >
-      <button class="btn btn-lg btn-primary btn-block" v-on:click="login()" type="submit">Sign in</button>
+        Sign in
+      </button>
     </form>
   </div>
 </template>
@@ -32,11 +40,14 @@ export default {
         username: "",
         password: ""
       }
-    }
+    };
   },
   methods: {
     login() {
-      if (this.input.username.trim() === "" || this.input.password.trim() === "") {
+      if (
+        this.input.username.trim() === "" ||
+        this.input.password.trim() === ""
+      ) {
         // show an error message to the user
         return;
       }
@@ -45,7 +56,10 @@ export default {
       for (let i = 0; i < mockAccounts.length; i++) {
         let account = mockAccounts[i];
         // match the credentials with mockAccounts
-        if (this.input.username !== account.id || this.input.password !== account.password) {
+        if (
+          this.input.username !== account.id ||
+          this.input.password !== account.password
+        ) {
           continue;
         }
         this.$emit("authenticated", true);
@@ -53,7 +67,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

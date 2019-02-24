@@ -20,7 +20,7 @@ export default {
     if (!this.$parent.authenticated) {
       this.$router.replace({ name: "login" });
     }
-  },
+  }
 };
 </script>
 
@@ -28,7 +28,8 @@ export default {
 .chart {
   display: inline-block;
 }
-.arc text, .overall-bar-chart text {
+.arc text,
+.overall-bar-chart text {
   font: 10px sans-serif;
 }
 
@@ -42,4 +43,3 @@ export default {
   }
 }
 </style>
-

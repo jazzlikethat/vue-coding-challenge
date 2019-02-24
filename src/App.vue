@@ -1,21 +1,27 @@
 <template>
   <div id="app">
     <div class="logout">
-      <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
+      <router-link
+        v-if="authenticated"
+        to="/login"
+        v-on:click.native="logout()"
+        replace
+        >Logout</router-link
+      >
     </div>
     <router-view @authenticated="setAuthenticated" />
   </div>
 </template>
 
 <script>
-import usersObj from '@/data/User.json';
+import usersObj from "@/data/User.json";
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       authenticated: false,
       mockAccounts: usersObj
-    }
+    };
   },
   mounted() {
     if (!this.authenticated) {
@@ -30,14 +36,14 @@ export default {
       this.authenticated = false;
     }
   }
-}
+};
 </script>
-
 
 <style lang="scss">
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
   text-align: center;
   color: #2c3e50;
 
