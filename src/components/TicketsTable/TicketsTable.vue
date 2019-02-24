@@ -8,7 +8,7 @@
         type="text"
         class="form-control"
         v-model="userSearchInput"
-        placeholder="Search tickets"
+        v-bind:placeholder="searchPlaceholder"
       />
     </div>
     <!-- Modal Component -->
@@ -44,7 +44,7 @@
         perPageDropdown: [10],
         dropdownAllowAll: false
       }"
-      :totalRows="filteredTickets.length"
+      :totalRows="filteredTicketsLength"
       :columns="columns"
       :rows="ticketsToShow"
       @on-column-filter="onColumnFilter"
@@ -57,7 +57,7 @@
 
 <script>
 import debounce from "lodash.debounce";
-import ticketsFromJSONFile from "@/data/sample-data-2.json";
+import ticketsFromJSONFile from "@/data/sample-data.json";
 import PieChart from "../PieChart.vue";
 import BarChart from "../BarChart.vue";
 import NewTicket from "../NewTicket.vue";
@@ -112,6 +112,9 @@ export default {
       };
       this.serverParams.page = 1;
       this.userSearchInput = "";
+
+      // render the tickets after reseting the params
+      this.performFilterSearch();
     },
     closeModal: function() {
       this.$refs.myModalRef.hide();
@@ -143,6 +146,14 @@ export default {
     userSearchInput: function() {
       this.debounceSearch();
     }
+  },
+  computed: {
+    searchPlaceholder() {
+      return "Search in " + this.filteredTickets.length + " tickets";
+    },
+    filteredTicketsLength() {
+      return this.filteredTickets.length;
+    }
   }
 };
 </script>
@@ -165,7 +176,7 @@ export default {
 
     input {
       display: inline-block;
-      width: 250px;
+      width: 300px;
       max-width: 50%;
     }
   }

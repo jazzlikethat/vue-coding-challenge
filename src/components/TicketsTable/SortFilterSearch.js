@@ -43,6 +43,42 @@ export default {
         return match;
       });
     },
+    performSort: function() {
+      let field = this.serverParams.sort.field;
+      let type = this.serverParams.sort.type;
+      if (field === "" || type === "") {
+        return;
+      }
+      let columnFieldType = this.columns.filter(function(entry) {
+        return entry.field === field;
+      })[0].type;
+      this.filteredTickets.sort(function(a, b) {
+        a = a[field];
+        b = b[field];
+        if (columnFieldType !== "number") {
+          a = a
+            .split("-")
+            .pop()
+            .trim();
+          b = b
+            .split("-")
+            .pop()
+            .trim();
+        }
+        if (type === "asc") {
+          return a < b ? -1 : a > b ? 1 : 0;
+        } else {
+          // type = "desc"
+          return a > b ? -1 : a < b ? 1 : 0;
+        }
+      });
+      // reset page number on sort
+      this.serverParams.page = 1;
+      this.ticketsToShow = this.filteredTickets.slice(
+        0,
+        this.serverParams.perPage
+      );
+    },
     getChartsData: function() {
       let priority = {
         "0 - Unassigned": 0,
@@ -92,6 +128,7 @@ export default {
 
       this.performFilter();
       this.performSearch();
+      this.performSort();
       this.getChartsData();
 
       this.ticketsToShow = this.filteredTickets.slice(
@@ -125,35 +162,7 @@ export default {
         field: field,
         type: type
       };
-      let columnFieldType = this.columns.filter(function(entry) {
-        return entry.field === field;
-      })[0].type;
-      this.filteredTickets.sort(function(a, b) {
-        a = a[field];
-        b = b[field];
-        if (columnFieldType !== "number") {
-          a = a
-            .split("-")
-            .pop()
-            .trim();
-          b = b
-            .split("-")
-            .pop()
-            .trim();
-        }
-        if (type === "asc") {
-          return a < b ? -1 : a > b ? 1 : 0;
-        } else {
-          // type = "dsc"
-          return a > b ? -1 : a < b ? 1 : 0;
-        }
-      });
-      // reset page number on sort
-      this.serverParams.page = 1;
-      this.ticketsToShow = this.filteredTickets.slice(
-        0,
-        this.serverParams.perPage
-      );
+      this.performSort();
     },
     onPageChange: function(params) {
       // event from vue-good-table
