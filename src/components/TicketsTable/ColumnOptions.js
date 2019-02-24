@@ -13,7 +13,6 @@ export default {
                   field: 'RequestorSeniority',
                   globalSearchDisabled: true,
                   sortable: true,
-                  sortFn: this.sortValueAfterHyphen,
                   formatFn: this.showValueAfterHyphen,
                   filterOptions: {
                     enabled: true,
@@ -35,19 +34,30 @@ export default {
                 {
                   label: 'Filed Against',
                   field: 'FiledAgainst',
-                  sortable: true
+                  globalSearchDisabled: true,
+                  sortable: true,
+                  filterOptions: {
+                    enabled: true,
+                    placeholder: "Filter",
+                    filterDropdownItems: ["Access/Login", "Hardware", "Software", "Systems"]
+                  }
                 },
                 {
                   label: 'Ticket Type',
                   field: 'TicketType',
-                  sortable: true
+                  globalSearchDisabled: true,
+                  sortable: true,
+                  filterOptions: {
+                    enabled: true,
+                    placeholder: "Filter",
+                    filterDropdownItems: ["Issue", "Request"]
+                  }
                 },
                 {
                   label: 'Severity',
                   field: 'Severity',
                   globalSearchDisabled: true,
                   sortable: true,
-                  sortFn: this.sortValueAfterHyphen,
                   formatFn: this.showValueAfterHyphen,
                   filterOptions: {
                     enabled: true,
@@ -65,7 +75,6 @@ export default {
                   field: 'Priority',
                   globalSearchDisabled: true,
                   sortable: true,
-                  sortFn: this.sortValueAfterHyphen,
                   formatFn: this.showValueAfterHyphen,
                   filterOptions: {
                     enabled: true,
@@ -89,7 +98,6 @@ export default {
                   field: 'Satisfaction',
                   globalSearchDisabled: true,
                   sortable: true,
-                  sortFn: this.sortValueAfterHyphen,
                   formatFn: this.showValueAfterHyphen,
                   filterOptions: {
                     enabled: true,
@@ -111,13 +119,6 @@ export default {
         }
     },
     methods: {
-        sortValueAfterHyphen(x, y) {
-            // x - row1 value for column
-            // y - row2 value for column
-            x = x.split("-").pop().trim();
-            y = y.split("-").pop().trim();
-            return (x < y ? -1 : (x > y ? 1 : 0));
-        },
         showValueAfterHyphen(inputString) {
             return inputString.split("-").pop().trim();
         }

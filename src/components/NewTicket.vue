@@ -166,6 +166,22 @@ export default {
             formData.CustomCreated = true;
             formData.ticket = this.ticketsLength + 1;
 
+            // Save the ticket in localStorage
+            let localTickets = [];
+            if (localStorage.getItem('local-tickets')) {
+                try {
+                    localTickets = JSON.parse(localStorage.getItem('local-tickets'));
+                }
+                catch (e) {
+                    localStorage.removeItem('local-tickets');
+                }
+            }
+            localTickets.unshift(formData);
+            // save it in localstorage
+            let jsonString = JSON.stringify(localTickets);
+            localStorage.removeItem('local-tickets');
+            localStorage.setItem('local-tickets', jsonString);
+
             this.$emit('new-ticket-data', formData);
             this.form = {
                 "Requestor": null,
