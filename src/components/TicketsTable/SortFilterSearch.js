@@ -21,6 +21,9 @@ export default {
         },
         performSearch: function() {
           let searchInput = this.userSearchInput;
+          if (searchInput.trim() === "") {
+            return;
+          }
           let keysToSearch = [
             "Requestor",
             "ITOwner",
@@ -111,10 +114,7 @@ export default {
           this.performFilterSearch();
         },
         onSortChange: function(params) { // event from vue-good-table
-          params.forEach(function(entry){
-            console.log(entry.type);
-          });
-          params = params.pop();
+          params = params[0];
           let field = params.field;
           let type = params.type;
           this.serverParams.sort = {

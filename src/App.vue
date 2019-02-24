@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import usersObj from '../data/User.json';
+import usersObj from '@/data/User.json';
 export default {
   name: 'App',
   data() {
