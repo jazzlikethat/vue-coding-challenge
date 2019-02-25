@@ -3,7 +3,7 @@ import * as d3 from "d3";
 export default {
   name: "PieChart",
   props: ["chartData", "attrClass"],
-  template: "<div></div",
+  template: "<div></div>",
   methods: {
     drawPieChart() {
       let dataset = [];
@@ -26,15 +26,7 @@ export default {
 
       let color = d3
         .scaleOrdinal()
-        .range([
-          "#98abc5",
-          "#8a89a6",
-          "#7b6888",
-          "#6b486b",
-          "#a05d56",
-          "#d0743c",
-          "#ff8c00"
-        ]);
+        .range(["#b3b300", "#8a89a6", "#d0743c", "#ff8c00"]);
 
       let arc = d3
         .arc()

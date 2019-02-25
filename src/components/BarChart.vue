@@ -3,7 +3,7 @@ import * as d3 from "d3";
 export default {
   name: "BarChart",
   props: ["chartData", "attrClass"],
-  template: "<div></div",
+  template: "<div></div>",
   methods: {
     drawBarChart() {
       let dataset = [];

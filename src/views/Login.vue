@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <form class="form-signin">
+    <form class="form-signin" @submit="onSubmit">
       <label for="inputEmail" class="sr-only">Username</label>
       <input
         type="text"
@@ -20,13 +20,12 @@
         placeholder="Password"
         required
       />
-      <button
-        class="btn btn-lg btn-primary btn-block"
-        v-on:click="login()"
-        type="submit"
-      >
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
         Sign in
       </button>
+      <div class="error-message" v-show="showErrorMessage">
+        <span>Incorrect username or password. Please try again.</span>
+      </div>
     </form>
   </div>
 </template>
@@ -39,19 +38,15 @@ export default {
       input: {
         username: "",
         password: ""
-      }
+      },
+      showErrorMessage: false
     };
   },
   methods: {
-    login() {
-      if (
-        this.input.username.trim() === "" ||
-        this.input.password.trim() === ""
-      ) {
-        // show an error message to the user
-        return;
-      }
+    onSubmit(event) {
+      event.preventDefault();
 
+      let authenticated = false;
       let mockAccounts = this.$parent.mockAccounts;
       for (let i = 0; i < mockAccounts.length; i++) {
         let account = mockAccounts[i];
@@ -62,8 +57,13 @@ export default {
         ) {
           continue;
         }
-        this.$emit("authenticated", true);
+        authenticated = true;
+        this.$emit("authenticated", authenticated);
         this.$router.replace({ name: "home" });
+      }
+
+      if (!this.authenticated) {
+        this.showErrorMessage = true;
       }
     }
   }
@@ -78,6 +78,11 @@ export default {
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
+
+  .error-message {
+    margin-top: 15px;
+    font-size: 85%;
+  }
 }
 
 .form-signin {
