@@ -55,7 +55,7 @@ export default {
       this.filteredTickets.sort(function(a, b) {
         a = a[field];
         b = b[field];
-        if (columnFieldType !== "number") {
+        if (columnFieldType !== "number" && columnFieldType !== "custom") {
           a = a
             .split("-")
             .pop()

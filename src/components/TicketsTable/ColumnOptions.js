@@ -119,6 +119,19 @@ export default {
           label: "Ticket Creation Date",
           field: "Ticket Creation Date",
           sortable: true
+        },
+        {
+          label: "Local Storage",
+          field: "CustomCreated",
+          globalSearchDisabled: true,
+          type: "custom",
+          sortable: false,
+          formatFn: this.showYesOrNoAsValue,
+          filterOptions: {
+            enabled: true,
+            placeholder: "Filter",
+            filterDropdownItems: ["Yes"]
+          }
         }
       ]
     };
@@ -129,6 +142,9 @@ export default {
         .split("-")
         .pop()
         .trim();
+    },
+    showYesOrNoAsValue(inputString) {
+      return inputString ? "Yes" : "No";
     }
   }
 };

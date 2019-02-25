@@ -230,7 +230,7 @@ export default {
       today = mm + "/" + dd + "/" + yyyy;
 
       formData["Ticket Creation Date"] = today;
-      formData.CustomCreated = true;
+      formData.CustomCreated = "Yes";
       formData.ticket = this.ticketsLength + 1;
 
       // Save the ticket in localStorage
