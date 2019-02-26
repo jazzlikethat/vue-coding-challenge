@@ -26,6 +26,11 @@
       <div class="error-message" v-show="showErrorMessage">
         <span>Incorrect username or password. Please try again.</span>
       </div>
+      <div class="skip-signin">
+        <b-button block variant="secondary" v-on:click="skipSignin()"
+          >Skip signin and go to Homepage</b-button
+        >
+      </div>
     </form>
   </div>
 </template>
@@ -65,6 +70,10 @@ export default {
       if (!this.authenticated) {
         this.showErrorMessage = true;
       }
+    },
+    skipSignin() {
+      this.$emit("authenticated", true);
+      this.$router.replace({ name: "home" });
     }
   }
 };
@@ -82,6 +91,10 @@ export default {
   .error-message {
     margin-top: 15px;
     font-size: 85%;
+  }
+
+  .skip-signin {
+    margin-top: 50px;
   }
 }
 
