@@ -1,9 +1,11 @@
 <template>
   <div class="table-container">
     <div class="search-input">
-      <b-button variant="outline-secondary" v-b-modal.new-ticket-modal
+      
+      <!-- <b-button variant="outline-secondary" v-b-modal.new-ticket-modal
         >Create ticket</b-button
-      >
+      > -->
+      
       <input
         type="text"
         class="form-control"
@@ -11,8 +13,9 @@
         v-bind:placeholder="searchPlaceholder"
       />
     </div>
+    
     <!-- Modal Component -->
-    <b-modal
+    <!-- <b-modal
       id="new-ticket-modal"
       title="Create new ticket"
       ref="myModalRef"
@@ -25,7 +28,8 @@
         v-on:close-modal="closeModal"
         :tickets-length="ticketsLength"
       ></new-ticket>
-    </b-modal>
+    </b-modal> -->
+
     <pie-chart
       attr-class="priority-chart"
       :chart-data="chartsData.priority"
@@ -60,7 +64,7 @@ import debounce from "lodash.debounce";
 import ticketsFromJSONFile from "@/data/sample-data.json";
 import PieChart from "../PieChart.vue";
 import BarChart from "../BarChart.vue";
-import NewTicket from "../NewTicket.vue";
+// import NewTicket from "../NewTicket.vue";
 import ColumnOptions from "./ColumnOptions.js";
 import SortFilterSearch from "./SortFilterSearch.js";
 
@@ -69,7 +73,7 @@ export default {
   components: {
     PieChart,
     BarChart,
-    NewTicket
+    // NewTicket
   },
   mixins: [ColumnOptions, SortFilterSearch],
   data: function() {
@@ -174,11 +178,11 @@ export default {
       margin-right: 5px;
     }
 
-    input {
-      display: inline-block;
-      width: 300px;
-      max-width: 50%;
-    }
+    // input {
+    //   display: inline-block;
+    //   width: 300px;
+    //   max-width: 50%;
+    // }
   }
 }
 </style>
