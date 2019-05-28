@@ -5,6 +5,15 @@
       <!-- <b-button variant="outline-secondary" v-b-modal.new-ticket-modal
         >Create ticket</b-button
       > -->
+
+      <b-button variant="outline-secondary" v-on:click="toggleGraphs">{{showGraphs ? "Hide Graphs" : "Show Graphs"}}</b-button>
+
+      <b-button variant="outline-secondary">
+        <download-excel
+          :data   = "filteredTickets">
+          Download Data
+        </download-excel>
+      </b-button>
       
       <input
         type="text"
@@ -89,6 +98,7 @@ export default {
         satisfaction: {}
       },
       userSearchInput: "",
+      showGraphs: false,
       serverParams: {
         // a map of column filters example: {name: 'john', age: '20'}
         columnFilters: {},
@@ -125,7 +135,11 @@ export default {
     },
     debounceSearch: debounce(function() {
       this.performFilterSearch();
-    }, 500)
+    }, 500),
+    toggleGraphs: function() {
+      this.showGraphs = !this.showGraphs;
+      this.$emit('toggleGraphsEvent', this.showGraphs);
+    }
   },
   mounted: function() {
     // Fetch tickets form localStorage
@@ -178,11 +192,11 @@ export default {
       margin-right: 5px;
     }
 
-    // input {
-    //   display: inline-block;
-    //   width: 300px;
-    //   max-width: 50%;
-    // }
+    input {
+      display: inline-block;
+      width: 300px;
+      max-width: 50%;
+    }
   }
 }
 </style>

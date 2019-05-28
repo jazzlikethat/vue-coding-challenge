@@ -1,8 +1,10 @@
 <template>
   <div class="home">
-    <div class="chart overall-bar-chart"></div>
-    <div class="chart priority-chart"></div>
-    <TicketsTable />
+    <div class="charts-container" v-show="showGraphs">
+      <div class="chart overall-bar-chart"></div>
+      <div class="chart priority-chart"></div>
+    </div>
+    <TicketsTable v-on:toggleGraphsEvent="toggleGraphs" />
   </div>
 </template>
 
@@ -14,6 +16,16 @@ export default {
   name: "home",
   components: {
     TicketsTable
+  },
+  data: function() {
+    return {
+      showGraphs: false
+    };
+  },
+  methods: {
+    toggleGraphs: function(data) {
+      this.showGraphs = data;
+    }
   },
   mounted() {
     // Edge case: On reload
