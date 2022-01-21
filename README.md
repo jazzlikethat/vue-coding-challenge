@@ -4,8 +4,6 @@
 
 [Task Details](https://github.com/jazzlikethat/vue-coding-challenge/blob/master/src/data/Task.pdf)
 
-App hosted on AWS: => http://13.58.56.107:5000
-
 <br /><br /><br /><br /><br />
 
 ## Project setup
