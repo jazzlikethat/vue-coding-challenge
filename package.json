@@ -13,7 +13,7 @@
     "bootstrap-vue": "^2.0.0-rc.13",
     "d3": "^5.9.1",
     "lodash.debounce": "^4.0.8",
-    "vue": "^2.6.7",
+    "vue": "^3.0.0",
     "vue-good-table": "^2.16.0",
     "vue-json-excel": "^0.2.98",
     "vue-loader": "^15.6.4",
